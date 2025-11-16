@@ -43,7 +43,8 @@ MACE:
   # <<< primary settings <<<
   
   # pretrained_model_name_or_path: stabilityai/stable-diffusion-2-1-base
-  pretrained_model_name_or_path: CompVis/stable-diffusion-v1-4
+  # pretrained_model_name_or_path: CompVis/stable-diffusion-v1-4
+  pretrained_model_name_or_path: stabilityai/stable-diffusion-xl-base-1.0
   with_prior_preservation: false
   preserve_prompt: a person
   preserve_data_dir: data/a person
@@ -54,7 +55,7 @@ MACE:
   uncond_loss_weight: 1.0
   num_class_images: 200
   seed: 2024
-  resolution: 512
+  resolution: 1024
   revision: null
   tokenizer_name: null
   instance_prompt: null

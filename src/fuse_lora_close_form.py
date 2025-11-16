@@ -1,5 +1,5 @@
 import torch
-from diffusers import StableDiffusionPipeline
+from diffusers import StableDiffusionXLPipeline
 from src.cfr_utils import *
 from src.dataset import MACEDataset
 import gc
@@ -9,17 +9,16 @@ def main(args):
         
     model_id = f"{args.output_dir}"
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    lora_pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float32).to(device)
+    lora_pipe = StableDiffusionXLPipeline.from_pretrained(model_id, torch_dtype=torch.float32).to(device)
     lora_pipe.safety_checker = None
-    lora_pipe.requires_safety_checker = False
     
-    final_pipe = StableDiffusionPipeline.from_pretrained(model_id, torch_dtype=torch.float32).to("cuda")
+    final_pipe = StableDiffusionXLPipeline.from_pretrained(model_id, torch_dtype=torch.float32).to("cuda")
     final_pipe.safety_checker = None
-    final_pipe.requires_safety_checker = False
     final_projection_matrices, _, _ = get_ca_layers(final_pipe.unet, with_to_k=True)
     
     train_dataset = MACEDataset(
         tokenizer=lora_pipe.tokenizer,
+        tokenizer_2=lora_pipe.tokenizer_2,
         size=args.resolution,
         center_crop=args.center_crop,
         use_pooler=args.use_pooler,
@@ -112,6 +111,6 @@ def main(args):
     # save the final model
     final_pipe.save_pretrained(args.final_save_path)
 
-    
+
 
 
